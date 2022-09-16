@@ -2,10 +2,75 @@
 //
 
 #include <iostream>
+#include "Action.h"
+#include "Solver.h"
+#include "GameState.h"
 
+#include <iostream>
+#include <vector>
+
+using namespace goap;
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::cout << "Wargame Goap  running...\n";
+    std::vector<Action> actions;
+
+    const int hasWeapon = 10;
+    const int hasAmmo = 15;
+    const int reload = 20;
+    const int playerInRange = 30;
+    const int hasEnoughHealth = 35;
+    const int attackPlayer = 40;
+
+    Action move("searchPlayer", 5);
+    move.setPrecondition(playerInRange, false);
+    move.setEffect(playerInRange, true);
+    actions.push_back(move);
+
+    Action Reload("Reloading", 5);
+    Reload.setPrecondition(reload, false);
+    Reload.setPrecondition(hasAmmo, false);
+    Reload.setEffect(reload, true);
+    Reload.setEffect(hasAmmo, true);
+    actions.push_back(Reload);
+
+    Action getWeapon("find weapon", 5);
+    getWeapon.setPrecondition(hasWeapon, false);
+    getWeapon.setEffect(hasWeapon, true);
+    actions.push_back(getWeapon);
+
+    Action health("more 50%", 5);
+    health.setPrecondition(hasEnoughHealth, true);
+    health.setPrecondition(hasAmmo, true);
+    health.setPrecondition(hasWeapon, false);
+    health.setEffect(attackPlayer, true);
+    actions.push_back(health);
+
+
+
+    GameState initial_state;
+    initial_state.setVariable(reload, false);
+    initial_state.setVariable(hasAmmo, true);
+    initial_state.setVariable(hasWeapon, true);
+    initial_state.setVariable(playerInRange, false);
+    initial_state.setVariable(hasEnoughHealth, false);
+
+    // ...and the goal state
+    GameState final_state;
+    final_state.setVariable(attackPlayer, true);
+    final_state.priority_ = 50;
+
+    Planner as;
+    try {
+        std::vector<Action> the_plan = as.plan(initial_state, final_state, actions);
+        std::cout << "Found a path!\n";
+        for (std::vector<Action>::reverse_iterator rit = the_plan.rbegin(); rit != the_plan.rend(); ++rit) {
+            std::cout << rit->name() << std::endl;
+        }
+    }
+    catch (const std::exception&) {
+        std::cout << "Sorry, could not find a path!\n";
+    }
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
