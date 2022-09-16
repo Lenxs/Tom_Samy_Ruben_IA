@@ -27,14 +27,18 @@ int main()
     move.setEffect(playerInRange, true);
     actions.push_back(move);
 
-    Action Reload("Reloading", 5);
+    Action Reload("Reloading", 1);
     Reload.setPrecondition(reload, false);
-    Reload.setPrecondition(hasAmmo, false);
+    Reload.setPrecondition(hasWeapon, true);
     Reload.setEffect(reload, true);
-    Reload.setEffect(hasAmmo, true);
     actions.push_back(Reload);
 
-    Action getWeapon("find weapon", 5);
+    Action EndReload("Reloading", 3);
+    EndReload.setPrecondition(hasAmmo, false);
+    EndReload.setEffect(hasAmmo, true);
+    actions.push_back(EndReload);
+
+    Action getWeapon("find weapon", 3);
     getWeapon.setPrecondition(hasWeapon, false);
     getWeapon.setEffect(hasWeapon, true);
     actions.push_back(getWeapon);
@@ -42,7 +46,8 @@ int main()
     Action health("more 50%", 5);
     health.setPrecondition(hasEnoughHealth, true);
     health.setPrecondition(hasAmmo, true);
-    health.setPrecondition(hasWeapon, false);
+    health.setPrecondition(hasWeapon, true);
+    health.setPrecondition(playerInRange, true);
     health.setEffect(attackPlayer, true);
     actions.push_back(health);
 
@@ -50,12 +55,11 @@ int main()
 
     GameState initial_state;
     initial_state.setVariable(reload, false);
-    initial_state.setVariable(hasAmmo, true);
+    initial_state.setVariable(hasAmmo, false);
     initial_state.setVariable(hasWeapon, true);
     initial_state.setVariable(playerInRange, false);
-    initial_state.setVariable(hasEnoughHealth, false);
+    initial_state.setVariable(hasEnoughHealth, true);
 
-    // ...and the goal state
     GameState final_state;
     final_state.setVariable(attackPlayer, true);
     final_state.priority_ = 50;
