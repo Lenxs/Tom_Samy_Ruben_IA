@@ -1,7 +1,7 @@
 #include "GameState.h"
 
 goap::GameState::GameState(const std::string name) : priority_(0), name_(name) {
-    //nop
+    
 }
 
 void goap::GameState::setVariable(const int var_id, const bool value) {

@@ -43,6 +43,11 @@ int main()
     getWeapon.setEffect(hasWeapon, true);
     actions.push_back(getWeapon);
 
+    Action healing("gain heal",4);
+    healing.setPrecondition(hasEnoughHealth, false);
+    healing.setEffect(hasEnoughHealth, true);
+    actions.push_back(healing);
+
     Action health("more 50%", 5);
     health.setPrecondition(hasEnoughHealth, true);
     health.setPrecondition(hasAmmo, true);
@@ -51,14 +56,23 @@ int main()
     health.setEffect(attackPlayer, true);
     actions.push_back(health);
 
+    Action shoot("shoot the player", 5);
+    shoot.setPrecondition(attackPlayer, false);
+    shoot.setPrecondition(hasEnoughHealth, true);
+    shoot.setPrecondition(hasAmmo, true);
+    shoot.setPrecondition(hasWeapon, true);
+    shoot.setPrecondition(playerInRange, true);
+    shoot.setEffect(attackPlayer, true);
+    actions.push_back(shoot);
+
 
 
     GameState initial_state;
     initial_state.setVariable(reload, false);
     initial_state.setVariable(hasAmmo, false);
-    initial_state.setVariable(hasWeapon, true);
+    initial_state.setVariable(hasWeapon, false);
     initial_state.setVariable(playerInRange, false);
-    initial_state.setVariable(hasEnoughHealth, true);
+    initial_state.setVariable(hasEnoughHealth, false);
 
     GameState final_state;
     final_state.setVariable(attackPlayer, true);

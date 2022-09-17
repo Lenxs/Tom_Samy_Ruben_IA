@@ -27,12 +27,8 @@ namespace goap {
     class Action {
     private:
         std::string name_; 
-        int cost_;         
-        // Preconditions are things that must be satisfied before this
-        // action can be taken. Only preconditions that "matter" are here.
+        int cost_;
         std::unordered_map<int, bool> preconditions_;
-
-        // Effects are things that happen when this action takes place.
         std::unordered_map<int, bool> effects_;
 
 
@@ -43,21 +39,9 @@ namespace goap {
         bool operableOn(const goap::GameState& gs) const;
 
         GameState actOn(const GameState& ws) const;
-
-        /**
-         Set the given precondition variable and value.
-         @param key the name of the precondition
-         @param value the value the precondition must hold
-         */
         void setPrecondition(const int key, const bool value) {
             preconditions_[key] = value;
         }
-
-        /**
-         Set the given effect of this action, in terms of variable and new value.
-         @param key the name of the effect
-         @param value the value that will result
-         */
         void setEffect(const int key, const bool value) {
             effects_[key] = value;
         }
